@@ -1,3 +1,4 @@
+
 module.exports.PostService = injections => {
 
     const create = Create.bind(null, injections);
@@ -10,7 +11,8 @@ module.exports.PostService = injections => {
     async function Create({ db }, payload) {
         try {
             const post = db.collection('posts');
-            return await post.insertOne(payload);
+            const postInserted = await post.insertOne(payload);
+            return { _id: postInserted.insertedId };
         } catch (err) {
             throw new Error(err.message);
         }
@@ -25,10 +27,11 @@ module.exports.PostService = injections => {
         }
     }
 
-    async function Erase({ db }, id) {
+    async function Erase({ db, mongodb }, id) {
         try {
             const post = db.collection('posts');
-            return await post.deleteOne({ _id: id });
+            const deleted = await post.deleteOne({ _id: new mongodb.ObjectID(id) });
+            return { deleted: deleted.deletedCount};
         } catch (err) {
             throw new Error(err.message);
         }

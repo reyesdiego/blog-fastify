@@ -1,0 +1,17 @@
+###
+GET http://localhost:30003
+
+###
+GET http://localhost:30003/post
+
+###
+POST http://localhost:30003/post
+Content-Type: application/json
+
+{
+    "post": "First Post",
+    "author": "Diego Reyes"
+}
+
+###
+DELETE http://localhost:30003/post/5ed1ef8546b77c4cf6a585ed
