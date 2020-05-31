@@ -42,8 +42,8 @@ async function start() {
                 url: process.env.MONGO_URL
             }).
             register(require('./routes/server.route')).
-            register(require('./routes/post.route'), { prefix: '/post' });
-            // register(require('./routes/user'), { prefix: '/users' });
+            register(require('./routes/post.route'), { prefix: '/post' }).
+            register(require('./routes/user.route'), { prefix: '/users' });
 
         await fastify.
             listen(process.env.PORT, '::').
