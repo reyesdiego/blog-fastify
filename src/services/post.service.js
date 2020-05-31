@@ -28,10 +28,10 @@ module.exports.PostService = injections => {
         }
     }
 
-    async function Erase({ db, mongodb }, id) {
+    async function Erase({ db, mongodb, user }, id) {
         try {
             const post = db.collection('posts');
-            const deleted = await post.deleteOne({ _id: mongodb.ObjectID(id) });
+            const deleted = await post.deleteOne({ _id: mongodb.ObjectID(id), 'author.email': user.email });
             return { deleted: deleted.deletedCount };
         } catch (err) {
             throw new Error(err.message);

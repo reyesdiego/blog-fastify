@@ -8,12 +8,13 @@ describe('POSTS', function () {
     test('Should Create a Post and return it with no errors', async function () {
         // Arrange
         const timestamp = Date.now();
+        const user = { email: faker.internet.email() };
         const payload = { post: faker.lorem.paragraph() };
-        const insertOne = jest.fn(() => Promise.resolve({ ops: [{ ...payload, createdAt: timestamp, updatedAt: timestamp }] }));
+        const insertOne = jest.fn(() => Promise.resolve({ ops: [{ ...payload, createdAt: timestamp, updatedAt: timestamp, author: { email: user.email } }] }));
         const db = {
             collection: jest.fn(() => ({ insertOne }))
         };
-        const postService = PostService({ db });
+        const postService = PostService({ db, user });
         // Act
         const post = await postService.create(payload);
         // Assert
@@ -23,6 +24,8 @@ describe('POSTS', function () {
         expect(insertOne).toHaveBeenCalled();
         expect(post).toHaveProperty('createdAt', timestamp);
         expect(post).toHaveProperty('updatedAt', timestamp);
+        expect(post).toHaveProperty('author');
+        expect(post.author).toHaveProperty('email', user.email);
     });
 
     test('Should Get the List of Posts with no errors', async function () {
@@ -33,7 +36,8 @@ describe('POSTS', function () {
         const db = {
             collection: jest.fn(() => ({ find })),
         };
-        const postService = PostService({ db });
+        const user = { email: faker.internet.email() };
+        const postService = PostService({ db, user });
         const payload = {};
         // Act
         const posts = await postService.list(payload);
@@ -41,7 +45,7 @@ describe('POSTS', function () {
         expect(db.collection).toBeCalledTimes(1);
         expect(db.collection).toBeCalledWith('posts');
         expect(find).toBeCalledTimes(1);
-        expect(find).toBeCalledWith(payload);
+        expect(find).toBeCalledWith({ $or: [{ status: 'PU' }, { 'author.email': user.email, status: { $in: ['PR', 'DR'] } }] });
         expect(posts).toHaveLength(1);
     });
 
@@ -55,14 +59,15 @@ describe('POSTS', function () {
         const db = {
             collection: jest.fn(() => ({ deleteOne }))
         };
+        const user = { email: faker.internet.email() };
         // Act
-        const postService = PostService({ db, mongodb });
+        const postService = PostService({ db, mongodb, user });
         const post = await postService.erase(id);
         // Assert
         expect(db.collection).toBeCalledTimes(1);
         expect(db.collection).toBeCalledWith('posts');
         expect(deleteOne).toBeCalledTimes(1);
-        expect(deleteOne).toBeCalledWith({ _id: id });
+        expect(deleteOne).toBeCalledWith({ _id: id, 'author.email': user.email });
         expect(post).toHaveProperty('deleted', 1);
     });
 });
