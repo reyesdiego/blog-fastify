@@ -8,7 +8,7 @@ module.exports.list = async function (req, res) {
 
 module.exports.create = async function (req, res) {
     const postService = PostService({ db: this.mongo.db, process, user: req.user });
-    res.status(200).send(await postService.create(req.body));
+    res.status(200).send(await postService.create({ ...req.body, status: req.query.status }));
 };
 
 module.exports.erase = async function (req, res) {

@@ -40,6 +40,7 @@ module.exports = async function (fastify) {
                                 _id: "5ed1ef8546b77c4cf6a585ed",
                                 post: 'Loren Ipsun',
                                 author: { email: 'reyes.diego@hotmail.com' },
+                                status: "PU",
                                 createdAt: '2020-05-31T06:07:27.820Z',
                                 updatedAt: '2020-05-31T06:07:27.820Z',
                             }
@@ -57,6 +58,17 @@ module.exports = async function (fastify) {
                 tags: ['Post'],
                 summary: 'Creates a new Post.',
                 description: 'This service creates a new Post for an Author. . To access this endpoint the user must login first to get a token. <b>Use the Register and Login endpoints. With the token go to the Authorize button in this page and set the Authorization token</b>',
+                query: {
+                    type: 'object',
+                    required: ['status'],
+                    properties: {
+                        status: {
+                            type: 'string',
+                            description: 'The Status of the Post - Can be Public - Draft - Private, [PU,DR,PU]',
+                            enum: ['PU', 'PR', 'DR']
+                        }
+                    }
+                },
                 body: {
                     type: 'object',
                     required: ['post'],
@@ -71,6 +83,11 @@ module.exports = async function (fastify) {
                             properties: {
                                 email: { type: 'string', description: 'The _id of the Post' }
                             }
+                        },
+                        status: {
+                            type: 'string',
+                            description: 'The Status of the Post - Can be Public - Draft - Private, [PU,DR,PU]',
+                            enum: ['PU', 'PR', 'DR']
                         }
                     }
                 },
