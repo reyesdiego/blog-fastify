@@ -10,9 +10,10 @@ module.exports.PostService = injections => {
     // private functions
     async function Create({ db }, payload) {
         try {
+            const timestamp = new Date();
             const post = db.collection('posts');
-            const postInserted = await post.insertOne(payload);
-            return { _id: postInserted.insertedId };
+            const postInserted = await post.insertOne({ ...payload, createdAt: timestamp, updatedAt: timestamp });
+            return postInserted.ops[0];
         } catch (err) {
             throw new Error(err.message);
         }
@@ -30,7 +31,7 @@ module.exports.PostService = injections => {
     async function Erase({ db, mongodb }, id) {
         try {
             const post = db.collection('posts');
-            const deleted = await post.deleteOne({ _id: new mongodb.ObjectID(id) });
+            const deleted = await post.deleteOne({ _id: mongodb.ObjectID(id) });
             return { deleted: deleted.deletedCount};
         } catch (err) {
             throw new Error(err.message);

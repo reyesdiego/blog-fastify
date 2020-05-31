@@ -3,6 +3,7 @@ GET http://localhost:30003
 
 ###
 GET http://localhost:30003/post
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODkzNDExODksImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsImlhdCI6MTU4OTM0MTA2OX0.Bp5fmFVtZZvMOk3u6MzSNoFPCJds4sNfKMQdsGrABvM
 
 ###
 POST http://localhost:30003/post
@@ -14,4 +15,23 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:30003/post/5ed1ef8546b77c4cf6a585ed
+DELETE http://localhost:30003/post/5ed1f118810be34e81bb7fde
+
+//--------------------------------------------------------------------------------
+###
+POST http://localhost:30003/users
+Content-Type: application/json
+
+{
+    "email": "diego@hotmail.com",
+    "password": "diego1"
+}
+
+###
+POST http://localhost:30003/users/login
+Content-Type: application/json
+
+{
+    "email": "diego@hotmail.com",
+    "password": "diego1"
+}

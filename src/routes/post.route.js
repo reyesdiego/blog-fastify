@@ -62,11 +62,31 @@ module.exports = async function (fastify) {
                         description: 'Successful response',
                         type: 'object',
                         properties: {
-                            _id: { type: 'string', description: 'Id of the new Post' }
+                            _id: { type: 'string', description: 'Id of the new Post' },
+                            post: {
+                                type: 'string',
+                                description: 'The body of the Post.'
+                            },
+                            author: {
+                                type: 'string',
+                                description: 'The Author of the Post.'
+                            },
+                            createdAt: {
+                                type: 'string',
+                                description: 'Post Creation date',
+                                format: 'timestamp'
+                            },
+                            updatedAt: {
+                                type: 'string',
+                                description: 'Post Update date',
+                                format: 'timestamp'
+                            }
                         },
                         example:
                         {
-                            _id: "5ed1ef8546b77c4cf6a585ed"
+                            _id: "5ed1ef8546b77c4cf6a585ed",
+                            post: "Loren Ipsun",
+                            author: "Diego Reyes"
                         }
                     }
                 }
