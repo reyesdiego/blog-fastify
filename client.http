@@ -1,17 +1,19 @@
+@auth = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTA5MDY3MDgsImVtYWlsIjoiZGllZ29AaG90bS5jb20iLCJpYXQiOjE1OTA5MDY0MDh9.w5guD04XaiC3NkpiRwzS0SPjexPV9ThRFjhFcl3-xLs
+
 ###
 GET http://localhost:30003
 
 ###
 GET http://localhost:30003/post
-authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODkzNDExODksImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsImlhdCI6MTU4OTM0MTA2OX0.Bp5fmFVtZZvMOk3u6MzSNoFPCJds4sNfKMQdsGrABvM
+authorization: {{auth}}
 
 ###
 POST http://localhost:30003/post
+authorization: {{auth}}
 Content-Type: application/json
 
 {
-    "post": "First Post",
-    "author": "Diego Reyes"
+    "post": "First Post"
 }
 
 ###
@@ -32,6 +34,6 @@ POST http://localhost:30003/users/login
 Content-Type: application/json
 
 {
-    "email": "diego@hotmail.com",
+    "email": "diego@hotm.com",
     "password": "diego1"
 }

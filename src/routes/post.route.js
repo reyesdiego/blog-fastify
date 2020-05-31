@@ -18,22 +18,36 @@ module.exports = async function (fastify) {
                             properties: {
                                 _id: { type: 'string', description: 'The _id of the Post' },
                                 post: { type: 'string', description: 'The body of the Post' },
-                                author: { type: 'string', description: 'Author of the Post' },
-                                createdAt: { type: 'string', format: 'date', description: 'Date time of the Post' }
+
+                                author: {
+                                    type: 'object',
+                                    description: 'Author of the Post',
+                                    properties: {
+                                        email: { type: 'string', description: 'The _id of the Post' }
+                                    }
+                                },
+                                status: { type: 'string', description: 'The Status of the Post' },
+                                createdAt: { type: 'string', format: 'timestamp', description: 'Date time of the Post' },
+                                updatedAt: {
+                                    type: 'string',
+                                    description: 'Post Update date',
+                                    format: 'timestamp'
+                                }
                             }
                         },
                         example: [
                             {
                                 _id: "5ed1ef8546b77c4cf6a585ed",
                                 post: 'Loren Ipsun',
-                                author: 'Diego Reyes',
-                                createdAt: '2020-01-01'
+                                author: { email: 'reyes.diego@hotmail.com' },
+                                createdAt: '2020-05-31T06:07:27.820Z',
+                                updatedAt: '2020-05-31T06:07:27.820Z',
                             }
                         ]
                     }
                 }
             },
-            // preValidation: [fastify.authenticate],
+            preValidation: [fastify.authenticate],
             handler: post.list
         },
         {
@@ -45,15 +59,18 @@ module.exports = async function (fastify) {
                 description: 'This service creates a new Post for an Author. . To access this endpoint the user must login first to get a token. <b>Use the Register and Login endpoints. With the token go to the Authorize button in this page and set the Authorization token</b>',
                 body: {
                     type: 'object',
-                    required: ['post', 'author'],
+                    required: ['post'],
                     properties: {
                         post: {
                             type: 'string',
                             description: 'The body of the Post.'
                         },
                         author: {
-                            type: 'string',
-                            description: 'The Author of the Post.'
+                            type: 'object',
+                            description: 'Author of the Post',
+                            properties: {
+                                email: { type: 'string', description: 'The _id of the Post' }
+                            }
                         }
                     }
                 },
@@ -68,8 +85,11 @@ module.exports = async function (fastify) {
                                 description: 'The body of the Post.'
                             },
                             author: {
-                                type: 'string',
-                                description: 'The Author of the Post.'
+                                type: 'object',
+                                description: 'Author of the Post',
+                                properties: {
+                                    email: { type: 'string', description: 'The _id of the Post' }
+                                }
                             },
                             createdAt: {
                                 type: 'string',
@@ -91,6 +111,7 @@ module.exports = async function (fastify) {
                     }
                 }
             },
+            preValidation: [fastify.authenticate],
             handler: post.create
         },
         {
@@ -124,6 +145,7 @@ module.exports = async function (fastify) {
                     }
                 }
             },
+            preValidation: [fastify.authenticate],
             handler: post.erase
         }
 

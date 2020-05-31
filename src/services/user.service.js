@@ -42,8 +42,9 @@ module.exports.UserService = injections => {
 
             // eslint-disable-next-line no-sync
             if (user.length && bcrypt.compareSync(password, user[0].password)) {
+                // 5 minutes expiration
                 const token = jwt.sign({
-                    exp: Math.floor(Date.now() / 1000) + 120,
+                    exp: Math.floor(Date.now() / 1000) + 300,
                     email
                 });
                 return { authorization: `Bearer ${token}` };
