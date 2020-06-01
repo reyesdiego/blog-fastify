@@ -28,7 +28,7 @@ describe('POSTS', function () {
         expect(post.author).toHaveProperty('email', user.email);
     });
 
-    test('Should Get the List of Posts with no errors', async function () {
+    test('Should Get the List of All the Posts with no errors', async function () {
         // Arrange
         const result = [{ post: faker.lorem.paragraph() }];
         const toArray = jest.fn(() => Promise.resolve(result));
@@ -38,14 +38,34 @@ describe('POSTS', function () {
         };
         const user = { email: faker.internet.email() };
         const postService = PostService({ db, user });
-        const payload = {};
         // Act
-        const posts = await postService.list(payload);
+        const posts = await postService.list();
         // Assert
         expect(db.collection).toBeCalledTimes(1);
         expect(db.collection).toBeCalledWith('posts');
         expect(find).toBeCalledTimes(1);
         expect(find).toBeCalledWith({ $or: [{ status: 'PU' }, { 'author.email': user.email, status: { $in: ['PR', 'DR'] } }] });
+        expect(posts).toHaveLength(1);
+    });
+
+    test('Should Get the List of Posts Filtered By Text Search with no errors', async function () {
+        // Arrange
+        const result = [{ post: faker.lorem.paragraph() }];
+        const toArray = jest.fn(() => Promise.resolve(result));
+        const find = jest.fn(() => ({ toArray }));
+        const db = {
+            collection: jest.fn(() => ({ find })),
+        };
+        const user = { email: faker.internet.email() };
+        const postService = PostService({ db, user });
+        const searchBy = "Lorem First";
+        // Act
+        const posts = await postService.list(searchBy);
+        // Assert
+        expect(db.collection).toBeCalledTimes(1);
+        expect(db.collection).toBeCalledWith('posts');
+        expect(find).toBeCalledTimes(1);
+        expect(find).toBeCalledWith({ $text: { $search: searchBy }, $or: [{ status: 'PU' }, { 'author.email': user.email, status: { $in: ['PR', 'DR'] } }] });
         expect(posts).toHaveLength(1);
     });
 
