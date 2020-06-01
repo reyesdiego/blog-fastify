@@ -1,0 +1,26 @@
+version: "2.1"
+
+services:
+  modusbox:
+    image: blog-fastify:1.0
+    build: .
+    depends_on:
+      - mongo
+    links:
+      - mongo
+    environment:
+      NODE_ENV: production
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/blog-fastify
+      - /blog-fastify/node_modules
+  mongo:
+    image: "bitnami/mongodb:4.0"
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodata:/data/db
+
+volumes:
+  mongodata:

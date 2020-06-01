@@ -19,19 +19,20 @@ module.exports.PostService = injections => {
         }
     }
 
-    async function List({ db, user }) {
+    async function List({ db, user }, text) {
         try {
+            const search = text ? { $text: { $search: text } } : {};
             const post = db.collection('posts');
-            return await post.find({ $or: [{ status: 'PU' }, { 'author.email': user.email, status: { $in: ['PR', 'DR'] } }] }).toArray();
+            return await post.find({ ...search, $or: [{ status: 'PU' }, { 'author.email': user.email, status: { $in: ['PR', 'DR'] } }] }).toArray();
         } catch (err) {
             throw new Error(err.message);
         }
     }
 
-    async function Erase({ db, mongodb }, id) {
+    async function Erase({ db, mongodb, user }, id) {
         try {
             const post = db.collection('posts');
-            const deleted = await post.deleteOne({ _id: mongodb.ObjectID(id) });
+            const deleted = await post.deleteOne({ _id: mongodb.ObjectID(id), 'author.email': user.email });
             return { deleted: deleted.deletedCount };
         } catch (err) {
             throw new Error(err.message);

@@ -1,14 +1,19 @@
-@auth = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTA5MDg0NTEsImVtYWlsIjoiZGllZ29AaG90bS5jb20iLCJpYXQiOjE1OTA5MDgxNTF9.q4CwQmqu96PFJFoQuZHu3yyA_hvLLj1tQY7yR8CF2Ms
+@auth = {{login.response.body.$.authorization}}
+@port = 30003
 
 ###
-GET http://localhost:30003
+GET http://localhost:{{port}}
 
 ###
-GET http://localhost:30003/post
+GET http://localhost:{{port}}/post
 authorization: {{auth}}
 
 ###
-POST http://localhost:30003/post
+GET http://localhost:{{port}}/post?post=Lorem
+authorization: {{auth}}
+
+###
+POST http://localhost:{{port}}/post?status=PU
 authorization: {{auth}}
 Content-Type: application/json
 
@@ -21,7 +26,7 @@ DELETE http://localhost:30003/post/5ed1f118810be34e81bb7fde
 
 //--------------------------------------------------------------------------------
 ###
-POST http://localhost:30003/users
+POST http://localhost:{{port}}/users
 Content-Type: application/json
 
 {
@@ -30,10 +35,11 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:30003/users/login
+# @name login
+POST http://localhost:{{port}}/users/login
 Content-Type: application/json
 
 {
-    "email": "diego@hotm.com",
+    "email": "diego@hotmail.com",
     "password": "diego1"
 }
