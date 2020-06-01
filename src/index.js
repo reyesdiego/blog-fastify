@@ -1,3 +1,4 @@
+const swStats = require('swagger-stats');
 const envSchema = require('env-schema');
 const path = require('path');
 const env = require('./config/environment');
@@ -14,6 +15,7 @@ const fastify = require('fastify')({
 // Register Swagger
 const swaggerConfig = require('./config/swagger');
 fastify.register(require('fastify-swagger'), swaggerConfig);
+fastify.register(swStats.getFastifyPlugin, { swaggerSpec: swaggerConfig });
 
 async function start() {
     try {
