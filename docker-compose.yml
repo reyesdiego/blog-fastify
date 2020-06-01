@@ -1,7 +1,7 @@
 version: "2.1"
 
 services:
-  modusbox:
+  blog:
     image: blog-fastify:1.0
     build: .
     depends_on:
