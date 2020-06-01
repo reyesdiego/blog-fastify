@@ -19,10 +19,11 @@ module.exports.PostService = injections => {
         }
     }
 
-    async function List({ db, user }) {
+    async function List({ db, user }, text) {
         try {
+            const search = text ? { $text: { $search: text } } : {};
             const post = db.collection('posts');
-            return await post.find({ $or: [{ status: 'PU' }, { 'author.email': user.email, status: { $in: ['PR', 'DR'] } }] }).toArray();
+            return await post.find({ ...search, $or: [{ status: 'PU' }, { 'author.email': user.email, status: { $in: ['PR', 'DR'] } }] }).toArray();
         } catch (err) {
             throw new Error(err.message);
         }

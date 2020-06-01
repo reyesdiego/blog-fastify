@@ -1,7 +1,7 @@
 module.exports = ({ envSchema, path }) => {
     const root = path.join(__dirname, '..', '..');
     const schema = {
-        required: ['PORT']
+        required: ['PORT', 'MONGO_URL']
     };
     envSchema({
         schema: schema,

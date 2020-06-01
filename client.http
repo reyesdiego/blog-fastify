@@ -1,11 +1,15 @@
-@auth = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTA5NTkzOTksImVtYWlsIjoiZGllZ29AaG90bWFpbC5jb20iLCJpYXQiOjE1OTA5NTkwOTl9.HWN7FHxeYoMqUDVs9_Odq7lOUNcii8d0sPJwwOrZVBw
-@port = 3000
+@auth = {{login.response.body.$.authorization}}
+@port = 30003
 
 ###
 GET http://localhost:{{port}}
 
 ###
 GET http://localhost:{{port}}/post
+authorization: {{auth}}
+
+###
+GET http://localhost:{{port}}/post?post=Lorem
 authorization: {{auth}}
 
 ###
@@ -31,6 +35,7 @@ Content-Type: application/json
 }
 
 ###
+# @name login
 POST http://localhost:{{port}}/users/login
 Content-Type: application/json
 

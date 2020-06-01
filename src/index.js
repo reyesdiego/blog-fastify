@@ -4,7 +4,8 @@ const env = require('./config/environment');
 // Environment variables.
 env({ envSchema, path });
 
-const fp = require('fastify-plugin');
+// Plugins
+const plugins = require('./plugins');
 
 const fastify = require('fastify')({
     logger: true
@@ -14,32 +15,16 @@ const fastify = require('fastify')({
 const swaggerConfig = require('./config/swagger');
 fastify.register(require('fastify-swagger'), swaggerConfig);
 
-// Authorization middleware plugin
-const auth = fp((server, opts, next) => {
-    server.register(require('fastify-jwt'), {
-        secret: 'change to secret phrase'
-    });
-    server.decorate('authenticate', async (req, res) => {
-        try {
-            await req.jwtVerify();
-        } catch (err) {
-            res.send(err);
-        }
-    });
-
-    next();
-});
-
 async function start() {
     try {
         fastify.
-            register(auth).
+            register(plugins.auth).
             register(require('fastify-helmet')).
             register(require('fastify-cors'), {}).
             register(require('fastify-compress'), { global: false }).
-            register(require('fastify-mongodb'), {
-                forceClose: true,
-                url: process.env.MONGO_URL
+            register(plugins.mongo, {
+                url: process.env.MONGO_URL,
+                useUnifiedTopology: true
             }).
             register(require('./routes/server.route')).
             register(require('./routes/post.route'), { prefix: '/post' }).

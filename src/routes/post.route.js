@@ -9,6 +9,15 @@ module.exports = async function (fastify) {
                 tags: ['Post'],
                 summary: 'List of Posts.',
                 description: 'This service returns the whole list of Posts. To access this endpoint the user must login first to get a token. <b>Use the Register and Login endpoints. With the token go to the Authorize button in this page and set the Authorization token</b>',
+                query: {
+                    type: 'object',
+                    properties: {
+                        post: {
+                            type: 'string',
+                            description: 'Text Search'
+                        }
+                    }
+                },
                 response: {
                     200: {
                         description: 'Successful response',
